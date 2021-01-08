@@ -13,6 +13,12 @@ function CourseLookUp() {
     const checkLetter = new RegExp(/[a-z]/i);
     const converStrToArr = new RegExp(/("[^"]+"|[^"\s]+)/g)
 
+    const mapping = new Map();
+    mapping.set("S", "Spring");
+    mapping.set("Su", "Summer");
+    mapping.set("F", "Fall");
+    mapping.set("W", "Winter");
+
     const inputef = useRef(null);
 
     useEffect(() => {
@@ -55,25 +61,33 @@ function CourseLookUp() {
     }
 
     function checkSpecialCharsinStr(str) {
-        if(str.includes('-')) {
+        if (str.includes('-')) {
             str = str.split('-').join(" ");
-        } else if(str.includes('.')) {
+        } else if (str.includes('.')) {
             str = str.split('.').join(" ");
-        } else if(str.includes(':')) {
+        } else if (str.includes(':')) {
             str = str.split(':').join(" ");
         }
         return str;
     }
 
+    function acceptAbbreviations(semester) {
+        let regex = /([a-z]+)(\d+)/gi;
+        let result = regex.exec(semester);
+        if(mapping.has(result[1])) return `${mapping.get(result[1])} ${result[2]}`
+        else return semester;
+    }
+
     function handleSubmit(e) {
         // e.preventDefault();
         setCourse(course);
-        var newString = checkSpecialCharsinStr(course);
-        newString = newString.match(converStrToArr);
-        const department = newString[0];
-        const classNumber = newString[1];
-        const year = newString[2];
-        const semester = newString[3];
+        let filteredString = checkSpecialCharsinStr(course);
+        filteredString = filteredString.match(converStrToArr);
+        console.log(filteredString);
+        const department = filteredString[0];
+        const classNumber = filteredString[1];
+        const semester = filteredString[2];
+        const year = filteredString[3];
         const courseInfo = {};
         courseInfo['department'] = department;
         courseInfo['course'] = classNumber;
@@ -100,26 +114,26 @@ function CourseLookUp() {
                 </header> <br />
                 <div className="border search-course text-left m-auto shadow p-3 mb-5 bg-white rounded">
                     <form action="submit" className="form">
-                    <div className="form-group">
-                        <div className="row d-flex w-100 m-auto">
-                            <div className="col-8 pr-0">
-                                <div className="m-0 w-100">
-                                    <label htmlFor="course" className="m-0">Course</label>
-                                    <input type="text"
-                                        className={`form-control ${!isValidDepartment || !isValidCourse || hasError ? ' error-state' : ''}`}
-                                        name="course"
-                                        id="course"
-                                        ref={inputef}
-                                        value={course.name}
-                                        onChange={handleChange} />
-                                    {hasError ? <span className="error">Error: Could not parse course</span> : ''}
+                        <div className="form-group">
+                            <div className="row d-flex w-100 m-auto">
+                                <div className="col-8 pr-0">
+                                    <div className="m-0 w-100">
+                                        <label htmlFor="course" className="m-0">Course</label>
+                                        <input type="text"
+                                            className={`form-control ${!isValidDepartment || !isValidCourse || hasError ? ' error-state' : ''}`}
+                                            name="course"
+                                            id="course"
+                                            ref={inputef}
+                                            value={course.name}
+                                            onChange={handleChange} />
+                                        {hasError ? <span className="error">Error: Could not parse course</span> : ''}
+                                    </div>
+                                </div>
+                                <div className="col-4 justify-content-center align-self-center">
+                                    <button className="btn btn-default float-right w-100" type="button" onClick={handleSubmit} disabled={isEnabled}>Submit</button>
                                 </div>
                             </div>
-                            <div className="col-4 justify-content-center align-self-center">
-                                <button className="btn btn-default float-right w-100" type="button" onClick={handleSubmit} disabled={isEnabled}>Submit</button>
-                            </div>
                         </div>
-                    </div>
                     </form>
                     {
                         showDetails ?
