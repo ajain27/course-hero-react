@@ -12,12 +12,12 @@ function CourseLookUp() {
     const isNumber = new RegExp(/^[0-9]+$/);
     const checkLetter = new RegExp(/[a-z]/i);
     const converStrToArr = new RegExp(/("[^"]+"|[^"\s]+)/g)
-
-    const mapping = new Map();
-    mapping.set("S", "Spring");
-    mapping.set("Su", "Summer");
-    mapping.set("F", "Fall");
-    mapping.set("W", "Winter");
+    const SemesterAbbr = {
+        "S": "Spring",
+        "Su": "Summer",
+        "F": "Fall",
+        "W": "Winter"
+    }
 
     const inputef = useRef(null);
 
@@ -71,22 +71,14 @@ function CourseLookUp() {
         return str;
     }
 
-    function acceptAbbreviations(semester) {
-        let regex = /([a-z]+)(\d+)/gi;
-        let result = regex.exec(semester);
-        if(mapping.has(result[1])) return `${mapping.get(result[1])} ${result[2]}`
-        else return semester;
-    }
-
     function handleSubmit(e) {
         // e.preventDefault();
         setCourse(course);
         let filteredString = checkSpecialCharsinStr(course);
         filteredString = filteredString.match(converStrToArr);
-        console.log(filteredString);
         const department = filteredString[0];
         const classNumber = filteredString[1];
-        const semester = filteredString[2];
+        const semester = SemesterAbbr[filteredString[2]];
         const year = filteredString[3];
         const courseInfo = {};
         courseInfo['department'] = department;
