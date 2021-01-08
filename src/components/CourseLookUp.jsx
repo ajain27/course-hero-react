@@ -2,11 +2,15 @@ import React, { useState, useEffect, useRef } from 'react'
 import '../styles/courses.scss'
 
 function CourseLookUp() {
-    // const [validCourse, setValidCourse] = useState('');
+    const [isValidDepartment, setIsValidDepartment] = useState(true);
+    const [isValidCourse, setIsValidCourse] = useState(true);
+    const [hasError, setHasError] = useState(false)
     let [course, setCourse] = useState({});
     const [isEnabled, setIsEnabled] = useState(true);
     const [showDetails, setShowDetails] = useState(false);
     let url = '';
+    const isNumber = new RegExp(/^[0-9]+$/);
+
     const inputef = useRef(null);
 
     useEffect(() => {
@@ -21,28 +25,61 @@ function CourseLookUp() {
             setShowDetails(false);
         }
         setCourse(e.target.value);
+        var newString = e.target.value.match(/("[^"]+"|[^"\s]+)/g);
+        let department = newString ? newString[0] : ''
+        let course = newString ? newString[1] : ''
+        if (department) {
+            isLetter(department);
+        }
+        else if (course) {
+            isNumbers(course);
+        }
+    }
+
+    function isLetter(str) {
+        if (str.match(/[a-z]/i)) {
+            setIsValidDepartment(true);
+            console.log('valid')
+        } else {
+            setIsValidDepartment(false);
+            console.log('Invalid')
+        }
+    }
+
+    function isNumbers(nums) {
+        if (nums && nums.match(isNumber)) {
+            console.log('valid');
+            setIsValidCourse(true);
+        } else {
+            console.log('Invalid');
+            setIsValidCourse(false);
+        }
     }
 
     function handleSubmit(e) {
-        if (e && e.target) {
-            e.preventDefault();
-            setCourse(course);
-            var newString = course.match(/("[^"]+"|[^"\s]+)/g);
-            const department = newString[0];
-            const classNumber = newString[1];
-            const year = newString[2];
-            const semester = newString[3];
-            const courseInfo = {};
-            courseInfo['department'] = department;
-            courseInfo['course'] = classNumber;
-            courseInfo['year'] = year;
-            courseInfo['semester'] = semester;
+        e.preventDefault();
+        setCourse(course);
+        var newString = course.match(/("[^"]+"|[^"\s]+)/g);
+        const department = newString[0];
+        const classNumber = newString[1];
+        const year = newString[2];
+        const semester = newString[3];
+        const courseInfo = {};
+        courseInfo['department'] = department;
+        courseInfo['course'] = classNumber;
+        courseInfo['year'] = year;
+        courseInfo['semester'] = semester;
+        if (courseInfo.department !== undefined && courseInfo.course !== undefined && courseInfo.year !== undefined && courseInfo.semester !== undefined) {
             course = courseInfo;
             setCourse(course);
             setShowDetails(true);
+            setHasError(false);
         } else {
-            e.preventDefault();
+            setHasError(true);
         }
+        setIsEnabled(false);
+        console.log(isEnabled);
+        e.target.value = null;
     }
     return (
         <>
@@ -55,17 +92,18 @@ function CourseLookUp() {
                 <div className="border search-course text-left m-auto shadow p-3 mb-5 bg-white rounded">
                     {/* <form action="submit" className="form"> */}
                     <div className="form-group">
-                        <div className="row d-flex w-100">
+                        <div className="row d-flex w-100 m-auto">
                             <div className="col-8 pr-0">
                                 <div className="m-0 w-100">
                                     <label htmlFor="course" className="m-0">Course</label>
                                     <input type="text"
-                                        className="form-control"
+                                        className={`form-control ${!isValidDepartment || !isValidCourse || hasError ? ' error-state' : ''}`}
                                         name="course"
                                         id="course"
                                         ref={inputef}
                                         value={course.name}
                                         onChange={handleChange} />
+                                    {hasError ? <span className="error">Error: Could not parse course</span> : ''}
                                 </div>
                             </div>
                             <div className="col-4 justify-content-center align-self-center">
@@ -76,33 +114,33 @@ function CourseLookUp() {
                     {/* </form> */}
                     {
                         showDetails ?
-                        <div className="card mt-3">
-                            <div className="card-header">
-                                {course.department} {course.course}
-                            </div>
-                            <div className="card-body">
-                                <table className="table">
-                                    <tbody>
-                                        <tr>
-                                            <td>Department</td>
-                                            <td>{course.department}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Course</td>
-                                            <td>{course.course}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Year</td>
-                                            <td>{course.year}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Semester</td>
-                                            <td>{course.semester}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div> : null
+                            <div className="card mt-3">
+                                <div className="card-header">
+                                    {course.department} {course.course}
+                                </div>
+                                <div className="card-body">
+                                    <table className="table">
+                                        <tbody>
+                                            <tr>
+                                                <td className="columnWidth">Department</td>
+                                                <td>{course.department}</td>
+                                            </tr>
+                                            <tr>
+                                                <td className="columnWidth">Course</td>
+                                                <td>{course.course}</td>
+                                            </tr>
+                                            <tr>
+                                                <td className="columnWidth">Year</td>
+                                                <td>{course.year}</td>
+                                            </tr>
+                                            <tr>
+                                                <td className="columnWidth">Semester</td>
+                                                <td>{course.semester}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div> : null
                     }
 
                 </div>

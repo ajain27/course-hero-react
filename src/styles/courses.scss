@@ -22,14 +22,14 @@ button {
     color: $ch-defauilt !important;
     border: 1px solid $ch-defauilt !important;
     position: relative;
-    left: 25px;
+    left: 15px;
 }
 button:hover, button:focus{
     background-color: $ch-defauilt !important;
     color: $white !important;
 }
 button:disabled {
-    border: 1px solid black !important;
+    border: 1px solid #AAA !important;
     background-color: $default-base !important;
     color: black !important;
     pointer-events: auto !important;
@@ -39,4 +39,24 @@ button:disabled {
 .card-header {
     background-color: $ch-defauilt !important;
     color: $white;
+}
+input[type="text"] {
+    border: 1px solid #AAA;
+}
+
+input[type="text"]:focus {
+    border: 1px solid #AAA !important;
+    box-shadow: 0 0 0 0.1rem #AAA;
+}
+
+input[type="text"].error-state {
+    border: 2px solid red !important;
+}
+
+.error {
+    color: red !important;
+}
+
+.columnWidth {
+ width: 25% !important;   
 }
