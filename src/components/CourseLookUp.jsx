@@ -108,7 +108,7 @@ function CourseLookUp() {
                     <form action="submit" className="form">
                         <div className="form-group">
                             <div className="row d-flex w-100 m-auto">
-                                <div className="col-8 pr-0">
+                                <div className="col-8 pl-0">
                                     <div className="m-0 w-100">
                                         <label htmlFor="course" className="m-0">Course</label>
                                         <input type="text"
