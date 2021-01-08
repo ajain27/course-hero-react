@@ -37,22 +37,18 @@ function CourseLookUp() {
         }
     }
 
-    function checkValidDepartment(str) {
-        if (str.match(checkLetter)) {
+    function checkValidDepartment(dept) {
+        if (dept && dept.match(checkLetter)) {
             setIsValidDepartment(true);
-            console.log('valid')
         } else {
             setIsValidDepartment(false);
-            console.log('Invalid')
         }
     }
 
-    function checkValidCourse(nums) {
-        if (nums && nums.match(isNumber)) {
-            console.log('valid');
+    function checkValidCourse(crs) {
+        if (crs && crs.match(isNumber)) {
             setIsValidCourse(true);
         } else {
-            console.log('Invalid');
             setIsValidCourse(false);
         }
     }
