@@ -54,10 +54,20 @@ function CourseLookUp() {
         }
     }
 
+    function checkSpecialCharsinStr(str) {
+        if(str.includes('-')) {
+            str = str.split('-').join(" ");
+        } else if(str.includes('.')) {
+            str = str.split('.').join(" ");
+        }
+        return str;
+    }
+
     function handleSubmit(e) {
         // e.preventDefault();
         setCourse(course);
-        var newString = course.match(converStrToArr);
+        var newString = checkSpecialCharsinStr(course);
+        newString = newString.match(converStrToArr);
         const department = newString[0];
         const classNumber = newString[1];
         const year = newString[2];
@@ -76,7 +86,6 @@ function CourseLookUp() {
             setHasError(true);
         }
         setIsEnabled(false);
-        console.log(isEnabled);
         e.target.value = null;
     }
     return (
