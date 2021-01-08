@@ -11,6 +11,7 @@ function CourseLookUp() {
     let url = '';
     const isNumber = new RegExp(/^[0-9]+$/);
     const checkLetter = new RegExp(/[a-z]/i);
+    const converStrToArr = new RegExp(/("[^"]+"|[^"\s]+)/g)
 
     const inputef = useRef(null);
 
@@ -26,7 +27,7 @@ function CourseLookUp() {
             setShowDetails(false);
         }
         setCourse(e.target.value);
-        var newString = e.target.value.match(/("[^"]+"|[^"\s]+)/g);
+        var newString = e.target.value.match(converStrToArr);
         let department = newString ? newString[0] : ''
         let course = newString ? newString[1] : ''
         if (department) {
@@ -56,7 +57,7 @@ function CourseLookUp() {
     function handleSubmit(e) {
         // e.preventDefault();
         setCourse(course);
-        var newString = course.match(/("[^"]+"|[^"\s]+)/g);
+        var newString = course.match(converStrToArr);
         const department = newString[0];
         const classNumber = newString[1];
         const year = newString[2];
