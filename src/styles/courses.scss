@@ -24,9 +24,16 @@ button {
     position: relative;
     left: 25px;
 }
-button:hover{
+button:hover, button:focus{
     background-color: $ch-defauilt !important;
     color: $white !important;
+}
+button:disabled {
+    border: 1px solid black !important;
+    background-color: $default-base !important;
+    color: black !important;
+    pointer-events: auto !important;
+    cursor: not-allowed !important;
 }
 
 .card-header {
