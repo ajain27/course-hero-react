@@ -10,6 +10,7 @@ function CourseLookUp() {
     const [showDetails, setShowDetails] = useState(false);
     let url = '';
     const isNumber = new RegExp(/^[0-9]+$/);
+    const checkLetter = new RegExp(/[a-z]/i);
 
     const inputef = useRef(null);
 
@@ -29,15 +30,15 @@ function CourseLookUp() {
         let department = newString ? newString[0] : ''
         let course = newString ? newString[1] : ''
         if (department) {
-            isLetter(department);
+            checkValidDepartment(department);
         }
         else if (course) {
-            isNumbers(course);
+            checkValidCourse(course);
         }
     }
 
-    function isLetter(str) {
-        if (str.match(/[a-z]/i)) {
+    function checkValidDepartment(str) {
+        if (str.match(checkLetter)) {
             setIsValidDepartment(true);
             console.log('valid')
         } else {
@@ -46,7 +47,7 @@ function CourseLookUp() {
         }
     }
 
-    function isNumbers(nums) {
+    function checkValidCourse(nums) {
         if (nums && nums.match(isNumber)) {
             console.log('valid');
             setIsValidCourse(true);
@@ -57,7 +58,7 @@ function CourseLookUp() {
     }
 
     function handleSubmit(e) {
-        e.preventDefault();
+        // e.preventDefault();
         setCourse(course);
         var newString = course.match(/("[^"]+"|[^"\s]+)/g);
         const department = newString[0];
@@ -90,7 +91,7 @@ function CourseLookUp() {
                     </nav>
                 </header> <br />
                 <div className="border search-course text-left m-auto shadow p-3 mb-5 bg-white rounded">
-                    {/* <form action="submit" className="form"> */}
+                    <form action="submit" className="form">
                     <div className="form-group">
                         <div className="row d-flex w-100 m-auto">
                             <div className="col-8 pr-0">
@@ -111,7 +112,7 @@ function CourseLookUp() {
                             </div>
                         </div>
                     </div>
-                    {/* </form> */}
+                    </form>
                     {
                         showDetails ?
                             <div className="card mt-3">
