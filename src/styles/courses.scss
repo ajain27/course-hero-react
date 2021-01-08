@@ -1,0 +1,35 @@
+@import './base';
+
+.container {
+    height: 100vh !important;
+    background-color: $default-base !important;
+}
+
+header nav.navbar {
+    background-color: $ch-defauilt !important;
+}
+
+.search-course {
+    max-width: 500px;
+    min-height: 500px;
+    background-color: $white;
+    border-radius: 5px;
+}
+button {
+    background-color: $white !important;
+    position: relative;
+    top: 10px;
+    color: $ch-defauilt !important;
+    border: 1px solid $ch-defauilt !important;
+    position: relative;
+    left: 25px;
+}
+button:hover{
+    background-color: $ch-defauilt !important;
+    color: $white !important;
+}
+
+.card-header {
+    background-color: $ch-defauilt !important;
+    color: $white;
+}
