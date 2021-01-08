@@ -59,6 +59,8 @@ function CourseLookUp() {
             str = str.split('-').join(" ");
         } else if(str.includes('.')) {
             str = str.split('.').join(" ");
+        } else if(str.includes(':')) {
+            str = str.split(':').join(" ");
         }
         return str;
     }
