@@ -12,13 +12,6 @@ function CourseLookUp() {
     const isNumber = new RegExp(/^[0-9]+$/);
     const checkLetter = new RegExp(/[a-z]/i);
     const converStrToArr = new RegExp(/("[^"]+"|[^"\s]+)/g)
-    const SemesterAbbr = {
-        "S": "Spring",
-        "Su": "Summer",
-        "F": "Fall",
-        "W": "Winter"
-    }
-
     const inputef = useRef(null);
 
     useEffect(() => {
@@ -71,15 +64,46 @@ function CourseLookUp() {
         return str;
     }
 
+    function getFulllYear(year) {
+        const getLengthOfYear = year.toString().length;
+        if (getLengthOfYear === 1) {
+            // if the year enteres is 01, 02, we append 0 in front to get thet correct year enetered 
+            const leadZero = `0${year}` 
+            const fullYear = `20${leadZero}` // getting the full year since only 2000 era is to be considered
+            return fullYear;
+        } else if(getLengthOfYear === 2) {
+            const fullYear = `20${year}` // getting the full year since only 2000 era is to be considered
+            return fullYear;
+        } else {
+            return year;
+        }
+    }
+
+    function getSemesters(semester) {
+        const SemesterAbbr = {
+            "S": "Spring",
+            "Su": "Summer",
+            "F": "Fall",
+            "W": "Winter"
+        }
+        if(semester in SemesterAbbr) {
+            return SemesterAbbr[semester]
+        } else {
+            return semester;
+        }       
+    }
+
     function handleSubmit(e) {
         // e.preventDefault();
         setCourse(course);
         let filteredString = checkSpecialCharsinStr(course);
         filteredString = filteredString.match(converStrToArr);
+        console.log(filteredString);
+        let filteredYear = getFulllYear(filteredString[3])
         const department = filteredString[0];
         const classNumber = filteredString[1];
-        const semester = SemesterAbbr[filteredString[2]];
-        const year = filteredString[3];
+        const semester = getSemesters([filteredString[2]]);
+        const year = filteredYear;
         const courseInfo = {};
         courseInfo['department'] = department;
         courseInfo['course'] = classNumber;
