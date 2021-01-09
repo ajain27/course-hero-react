@@ -20,14 +20,15 @@ function CourseLookUp() {
     }, [])
 
     function handleChange(e) {
-        if (!e.target.value) {
+        let input = e.target;
+        if (!input.value) {
             setIsDisabled(true)
         } else {
             setIsDisabled(false);
             setShowDetails(false);
         }
-        setCourse(e.target.value);
-        var newString = e.target.value.match(converStrToArr);
+        setCourse(input.value);
+        var newString = input.value.match(converStrToArr);
         let department = newString ? newString[0] : ''
         let course = newString ? newString[1] : ''
         if (department) {
@@ -35,18 +36,19 @@ function CourseLookUp() {
         } else if (course) {
             checkValidCourse(course);
         }
-        e.target.value = e.target.value ? normalizeInput(e.target.value) : '';
+        input.value = input.value ? normalizeInput(input.value) : '';
     }
 
-    function normalizeInput(inputString) {
-        if (inputString.includes('-') || inputString.includes(':') || inputString.includes(' ')) {
-            if (inputString.length === 6) {
-                inputString = inputString + " "
+    // Adding space while typing.
+    function normalizeInput(courseInfo) {
+        if (courseInfo.includes('-') || courseInfo.includes(':') || courseInfo.includes(' ')) {
+            if (courseInfo.length === 6) {
+                courseInfo = courseInfo + " "
             }
-        } else if (inputString.length === 5) {
-            inputString = inputString + " "
+        } else if (courseInfo.length === 5) {
+            courseInfo = courseInfo + " "
         }
-        return inputString;
+        return courseInfo;
     }
 
     function checkValidDepartment(dept) {
@@ -108,6 +110,19 @@ function CourseLookUp() {
         }
     }
 
+    function alphaOnly(a) {
+        var b = '';
+        for (var i = 0; i < a.length; i++) {
+            if (a[i] >= 'A' && a[i] <= 'z') b += a[i];
+        }
+        return b.match(converStrToArr);
+    }
+
+    function numsOnly(num) {
+        let numberPattern = /\d+/g;
+       return num.match(numberPattern);
+    }
+
     function handleSubmit(e) {
         // e.preventDefault();
         setCourse(course);
@@ -115,13 +130,11 @@ function CourseLookUp() {
         filteredString = filteredString.match(converStrToArr);
         if (filteredString.length === 4) {
             let filteredYear = getFulllYear(filteredString[3])
-            const department = filteredString[0];
-            const classNumber = filteredString[1];
             const semester = getSemesters([filteredString[2]]);
             const year = filteredYear;
             const courseInfo = {};
-            courseInfo['department'] = department;
-            courseInfo['course'] = classNumber;
+            courseInfo['department'] = filteredString[0];
+            courseInfo['course'] = filteredString[1];
             courseInfo['year'] = year;
             courseInfo['semester'] = semester;
             if (courseInfo.department !== undefined && courseInfo.course !== undefined && courseInfo.year !== undefined && courseInfo.semester !== undefined) {
@@ -138,16 +151,15 @@ function CourseLookUp() {
             setHasError(true);
             setIsDisabled(true);
         }
-
     }
     return (
         <>
             <div className="container w-100 p-0">
-                <header>
+                <header className="mb-5">
                     <nav className="navbar navbar-dark bg-primary text-center">
                         <a className="navbar-brand" href={url}><strong>Course Hero</strong></a>
                     </nav>
-                </header> <br />
+                </header>
                 <div className="border search-course text-left m-auto shadow p-3 mb-5 bg-white rounded">
                     <form action="submit" className="form">
                         <span htmlFor="course" className="m-0">Course</span>
