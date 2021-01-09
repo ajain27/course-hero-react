@@ -51,8 +51,10 @@ function CourseLookUp() {
     function checkValidCourse(crs) {
         if (crs && crs.match(isNumber)) {
             setIsValidCourse(true);
+            setHasError(false);
         } else {
             setIsValidCourse(false);
+            setHasError(true);
         }
     }
 
