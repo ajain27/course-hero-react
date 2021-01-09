@@ -6,7 +6,7 @@ function CourseLookUp() {
     const [isValidCourse, setIsValidCourse] = useState(true);
     const [hasError, setHasError] = useState(false)
     let [course, setCourse] = useState({});
-    const [isEnabled, setIsEnabled] = useState(true);
+    const [isDisabled, setIsDisabled] = useState(true);
     const [showDetails, setShowDetails] = useState(false);
     let url = '';
     const isNumber = new RegExp(/^[0-9]+$/);
@@ -16,13 +16,14 @@ function CourseLookUp() {
 
     useEffect(() => {
         inputef.current.focus();
+        setIsDisabled(true)
     }, [])
 
     function handleChange(e) {
         if (!e.target.value) {
-            setIsEnabled(true)
+            setIsDisabled(true)
         } else {
-            setIsEnabled(false);
+            setIsDisabled(false);
             setShowDetails(false);
         }
         setCourse(e.target.value);
@@ -54,6 +55,7 @@ function CourseLookUp() {
     }
 
     function checkSpecialCharsinStr(str) {
+        // Accepting the special characters
         if (str.includes('-')) {
             str = str.split('-').join(" ");
         } else if (str.includes('.')) {
@@ -117,7 +119,7 @@ function CourseLookUp() {
         } else {
             setHasError(true);
         }
-        setIsEnabled(false);
+        setIsDisabled(false);
         e.target.value = null;
     }
     return (
@@ -146,7 +148,7 @@ function CourseLookUp() {
                                     </div>
                                 </div>
                                 <div className="col-4 justify-content-center align-self-center">
-                                    <button className="btn btn-default float-right w-100" type="button" onClick={handleSubmit} disabled={isEnabled}>Submit</button>
+                                    <button className="btn btn-default float-right w-100" type="button" onClick={handleSubmit} disabled={isDisabled}>Submit</button>
                                 </div>
                             </div>
                         </div>
