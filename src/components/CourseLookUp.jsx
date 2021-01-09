@@ -35,6 +35,18 @@ function CourseLookUp() {
         } else if (course) {
             checkValidCourse(course);
         }
+        e.target.value = e.target.value ? normalizeInput(e.target.value) : '';
+    }
+
+    function normalizeInput(inputString) {
+        if (inputString.includes('-') || inputString.includes(':') || inputString.includes(' ')) {
+            if (inputString.length === 6) {
+                inputString = inputString + " "
+            }
+        } else if (inputString.length === 5) {
+            inputString = inputString + " "
+        }
+        return inputString;
     }
 
     function checkValidDepartment(dept) {
@@ -142,13 +154,14 @@ function CourseLookUp() {
                         <div className="form-group mb-0">
                             <div className="row d-flex w-100 m-auto">
                                 <div className="col-8 pl-0">
-                                    <div className="m-0 w-100">                                        
+                                    <div className="m-0 w-100">
                                         <input type="text"
                                             className={`form-control ${!isValidDepartment || !isValidCourse || hasError ? ' error-state' : ''}`}
                                             name="course"
                                             id="course"
                                             ref={inputef}
                                             value={course.name}
+                                            pattern='(/^(.{6})(.*)$/, "$1 $2")'
                                             onChange={handleChange} />
                                     </div>
                                 </div>
