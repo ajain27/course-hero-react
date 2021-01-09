@@ -41,8 +41,10 @@ function CourseLookUp() {
     function checkValidDepartment(dept) {
         if (dept && dept.match(checkLetter)) {
             setIsValidDepartment(true);
+            setHasError(false);
         } else {
             setIsValidDepartment(false);
+            setHasError(true);
         }
     }
 
@@ -58,8 +60,6 @@ function CourseLookUp() {
         // Accepting the special characters
         if (str.includes('-')) {
             str = str.split('-').join(" ");
-        } else if (str.includes('.')) {
-            str = str.split('.').join(" ");
         } else if (str.includes(':')) {
             str = str.split(':').join(" ");
         }
@@ -70,10 +70,10 @@ function CourseLookUp() {
         const getLengthOfYear = year.toString().length;
         if (getLengthOfYear === 1) {
             // if the year enteres is 01, 02, we append 0 in front to get thet correct year enetered 
-            const leadZero = `0${year}` 
+            const leadZero = `0${year}`
             const fullYear = `20${leadZero}` // getting the full year since only 2000 era is to be considered
             return fullYear;
-        } else if(getLengthOfYear === 2) {
+        } else if (getLengthOfYear === 2) {
             const fullYear = `20${year}` // getting the full year since only 2000 era is to be considered
             return fullYear;
         } else {
@@ -88,11 +88,11 @@ function CourseLookUp() {
             "F": "Fall",
             "W": "Winter"
         }
-        if(semester in SemesterAbbr) {
+        if (semester in SemesterAbbr) {
             return SemesterAbbr[semester]
         } else {
             return semester;
-        }       
+        }
     }
 
     function handleSubmit(e) {
@@ -100,27 +100,31 @@ function CourseLookUp() {
         setCourse(course);
         let filteredString = checkSpecialCharsinStr(course);
         filteredString = filteredString.match(converStrToArr);
-        console.log(filteredString);
-        let filteredYear = getFulllYear(filteredString[3])
-        const department = filteredString[0];
-        const classNumber = filteredString[1];
-        const semester = getSemesters([filteredString[2]]);
-        const year = filteredYear;
-        const courseInfo = {};
-        courseInfo['department'] = department;
-        courseInfo['course'] = classNumber;
-        courseInfo['year'] = year;
-        courseInfo['semester'] = semester;
-        if (courseInfo.department !== undefined && courseInfo.course !== undefined && courseInfo.year !== undefined && courseInfo.semester !== undefined) {
-            course = courseInfo;
-            setCourse(course);
-            setShowDetails(true);
-            setHasError(false);
+        if (filteredString.length === 4) {
+            let filteredYear = getFulllYear(filteredString[3])
+            const department = filteredString[0];
+            const classNumber = filteredString[1];
+            const semester = getSemesters([filteredString[2]]);
+            const year = filteredYear;
+            const courseInfo = {};
+            courseInfo['department'] = department;
+            courseInfo['course'] = classNumber;
+            courseInfo['year'] = year;
+            courseInfo['semester'] = semester;
+            if (courseInfo.department !== undefined && courseInfo.course !== undefined && courseInfo.year !== undefined && courseInfo.semester !== undefined) {
+                course = courseInfo;
+                setCourse(course);
+                setShowDetails(true);
+                setHasError(false);
+            } else {
+                setHasError(true);
+            }
+            setIsDisabled(false);
+            e.target.value = null;
         } else {
             setHasError(true);
         }
-        setIsDisabled(false);
-        e.target.value = null;
+
     }
     return (
         <>
