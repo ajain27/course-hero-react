@@ -32,8 +32,7 @@ function CourseLookUp() {
         let course = newString ? newString[1] : ''
         if (department) {
             checkValidDepartment(department);
-        }
-        else if (course) {
+        } else if (course) {
             checkValidCourse(course);
         }
     }
@@ -125,6 +124,7 @@ function CourseLookUp() {
             e.target.value = null;
         } else {
             setHasError(true);
+            setIsDisabled(true);
         }
 
     }
@@ -138,11 +138,11 @@ function CourseLookUp() {
                 </header> <br />
                 <div className="border search-course text-left m-auto shadow p-3 mb-5 bg-white rounded">
                     <form action="submit" className="form">
-                        <div className="form-group">
+                        <span htmlFor="course" className="m-0">Course</span>
+                        <div className="form-group mb-0">
                             <div className="row d-flex w-100 m-auto">
                                 <div className="col-8 pl-0">
-                                    <div className="m-0 w-100">
-                                        <label htmlFor="course" className="m-0">Course</label>
+                                    <div className="m-0 w-100">                                        
                                         <input type="text"
                                             className={`form-control ${!isValidDepartment || !isValidCourse || hasError ? ' error-state' : ''}`}
                                             name="course"
@@ -150,7 +150,6 @@ function CourseLookUp() {
                                             ref={inputef}
                                             value={course.name}
                                             onChange={handleChange} />
-                                        {hasError ? <span className="error">Error: Could not parse course</span> : ''}
                                     </div>
                                 </div>
                                 <div className="col-4 justify-content-center align-self-center">
@@ -158,6 +157,7 @@ function CourseLookUp() {
                                 </div>
                             </div>
                         </div>
+                        {hasError ? <span className="error">Error: Could not parse course</span> : ''}
                     </form>
                     {
                         showDetails ?

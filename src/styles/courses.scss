@@ -17,12 +17,8 @@ header nav.navbar {
 }
 button {
     background-color: $white !important;
-    position: relative;
-    top: 10px;
     color: $ch-defauilt !important;
     border: 1px solid $ch-defauilt !important;
-    position: relative;
-    left: 15px;
 }
 button:hover, button:focus{
     background-color: $ch-defauilt !important;
