@@ -45,6 +45,9 @@ function CourseLookUp() {
             if (courseInfo.length === 6) {
                 courseInfo = courseInfo + " "
             }
+        } else if (courseInfo.includes('.') || courseInfo.includes(',')) {
+            setIsDisabled(true);
+            setHasError(true);
         } else if (courseInfo.length === 5) {
             courseInfo = courseInfo + " "
         }
@@ -71,14 +74,22 @@ function CourseLookUp() {
         }
     }
 
-    function checkSpecialCharsinStr(str) {
+    function checkSpecialCharsinDc(str) {
         // Accepting the special characters
-        if (str.includes('-')) {
-            str = str.split('-').join(" ");
-        } else if (str.includes(':')) {
-            str = str.split(':').join(" ");
+        let dc = str.substr(0, 6);
+        if (dc) {
+            if (!dc.includes('.') || !dc.includes(',')) {
+                if (dc.includes('-')) {
+                    dc = dc.split('-').join(" ");
+                } else if (dc.includes(':')) {
+                    dc = dc.split(':').join(" ");
+                }
+                return dc;
+            } else {
+                return;
+            }
         }
-        return str;
+
     }
 
     function getFulllYear(year) {
@@ -110,6 +121,22 @@ function CourseLookUp() {
         }
     }
 
+    function isValidDc(input) {
+        let finalArray = [];
+        const deptCrs = input.substr(0, 5);
+        let inputStr = checkSpecialCharsinDc(deptCrs);
+        const department = alphaOnly(inputStr);
+        const courseNumber = numsOnly(inputStr);
+        finalArray.push(...department, ...courseNumber);
+        return finalArray;
+    }
+
+    function isValidSemYear(input) {
+        let semyear = input.substr(6, 12);
+        semyear = semyear.match(converStrToArr);
+        return semyear;
+    }
+
     function alphaOnly(a) {
         var b = '';
         for (var i = 0; i < a.length; i++) {
@@ -120,14 +147,15 @@ function CourseLookUp() {
 
     function numsOnly(num) {
         let numberPattern = /\d+/g;
-       return num.match(numberPattern);
+        return num.match(numberPattern);
     }
 
     function handleSubmit(e) {
         // e.preventDefault();
         setCourse(course);
-        let filteredString = checkSpecialCharsinStr(course);
-        filteredString = filteredString.match(converStrToArr);
+        const departmentAndCourse = isValidDc(course);
+        const semesterAndYear = isValidSemYear(course);
+        let filteredString = [...departmentAndCourse, ... semesterAndYear]
         if (filteredString.length === 4) {
             let filteredYear = getFulllYear(filteredString[3])
             const semester = getSemesters([filteredString[2]]);
