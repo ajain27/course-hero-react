@@ -13,6 +13,12 @@ function CourseLookUp() {
     const checkLetter = new RegExp(/[a-z]/i);
     const converStrToArr = new RegExp(/("[^"]+"|[^"\s]+)/g)
     const inputef = useRef(null);
+    const SemesterAbbr = {
+        "S": "Spring",
+        "Su": "Summer",
+        "F": "Fall",
+        "W": "Winter"
+    }
 
     useEffect(() => {
         inputef.current.focus();
@@ -28,11 +34,11 @@ function CourseLookUp() {
             setShowDetails(false);
         }
         setCourse(input.value);
-        if(input.value.length <=2) {
-            checkValidDepartment(input.value);
-        } else if(input.value.length > 2 && input.value.length < 6) {
-            checkValidCourse(input.value);
-        }
+        // if (input.value.length <= 2) {
+        //     checkValidDepartment(input.value);
+        // } else if (input.value.length > 2 && input.value.length < 6) {
+        //     checkValidCourse(input.value);
+        // }
         input.value = input.value ? normalizeInput(input.value) : '';
     }
 
@@ -64,7 +70,7 @@ function CourseLookUp() {
     }
 
     function checkValidCourse(crs) {
-        const courseNumber = crs.substring(2,5)
+        const courseNumber = crs.substring(2, 5)
         if (courseNumber && courseNumber.match(isNumber)) {
             setIsDisabled(false);
             setIsValidCourse(true);
@@ -91,7 +97,6 @@ function CourseLookUp() {
                 return;
             }
         }
-
     }
 
     function getFulllYear(year) {
@@ -110,33 +115,43 @@ function CourseLookUp() {
     }
 
     function getSemesters(semester) {
-        const SemesterAbbr = {
-            "S": "Spring",
-            "Su": "Summer",
-            "F": "Fall",
-            "W": "Winter"
-        }
         if (semester in SemesterAbbr) {
             return SemesterAbbr[semester]
         } else {
-            return semester;
+            setHasError(true);
+            setIsDisabled(true);
         }
     }
 
     function isValidDc(input) {
         let departmentAndCourse = [];
-        const deptCrs = input.substr(0, 5);
+        const deptCrs = input.substr(0, 6);
         let inputStr = checkSpecialCharsinDc(deptCrs);
         const department = alphaOnly(inputStr);
         const courseNumber = numsOnly(inputStr);
-        return departmentAndCourse.push(...department, ...courseNumber);
+        departmentAndCourse.push(...department, ...courseNumber);
+        return departmentAndCourse;
     }
 
     function isValidSY(input) {
-        let semyear = input.substr(6, 12);
-        semyear = semyear.match(converStrToArr);
-        return semyear;
+        let validSY;
+        let semyear;
+        semyear = input.substr(6, 13).trim();
+        if (!hasWhiteSpace(semyear)) {
+            const sem = alphaOnly(semyear);
+            const year = numsOnly(semyear);
+            const SY = [...sem, ...year]
+            validSY = SY;
+        } else {
+            validSY = semyear.match(converStrToArr);
+        }
+        return validSY;
     }
+
+    function hasWhiteSpace(s) {
+        return /\s/g.test(s);
+    }
+
 
     function alphaOnly(a) {
         var b = '';
@@ -156,7 +171,8 @@ function CourseLookUp() {
         setCourse(course);
         const departmentAndCourse = isValidDc(course);
         const semesterAndYear = isValidSY(course);
-        let filteredString = [...departmentAndCourse, ... semesterAndYear]
+        console.log(semesterAndYear);
+        let filteredString = [...departmentAndCourse, ...semesterAndYear]
         if (filteredString.length === 4) {
             let filteredYear = getFulllYear(filteredString[3])
             const semester = getSemesters([filteredString[2]]);
