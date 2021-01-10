@@ -28,13 +28,10 @@ function CourseLookUp() {
             setShowDetails(false);
         }
         setCourse(input.value);
-        var newString = input.value.match(converStrToArr);
-        let department = newString ? newString[0] : ''
-        let course = newString ? newString[1] : ''
-        if (department) {
-            checkValidDepartment(department);
-        } else if (course) {
-            checkValidCourse(course);
+        if(input.value.length <=2) {
+            checkValidDepartment(input.value);
+        } else if(input.value.length > 2 && input.value.length < 6) {
+            checkValidCourse(input.value);
         }
         input.value = input.value ? normalizeInput(input.value) : '';
     }
@@ -56,19 +53,24 @@ function CourseLookUp() {
 
     function checkValidDepartment(dept) {
         if (dept && dept.match(checkLetter)) {
+            setIsDisabled(false);
             setIsValidDepartment(true);
             setHasError(false);
         } else {
+            setIsDisabled(true);
             setIsValidDepartment(false);
             setHasError(true);
         }
     }
 
     function checkValidCourse(crs) {
-        if (crs && crs.match(isNumber)) {
+        const courseNumber = crs.substring(2,5)
+        if (courseNumber && courseNumber.match(isNumber)) {
+            setIsDisabled(false);
             setIsValidCourse(true);
             setHasError(false);
         } else {
+            setIsDisabled(true);
             setIsValidCourse(false);
             setHasError(true);
         }
@@ -122,16 +124,15 @@ function CourseLookUp() {
     }
 
     function isValidDc(input) {
-        let finalArray = [];
+        let departmentAndCourse = [];
         const deptCrs = input.substr(0, 5);
         let inputStr = checkSpecialCharsinDc(deptCrs);
         const department = alphaOnly(inputStr);
         const courseNumber = numsOnly(inputStr);
-        finalArray.push(...department, ...courseNumber);
-        return finalArray;
+        return departmentAndCourse.push(...department, ...courseNumber);
     }
 
-    function isValidSemYear(input) {
+    function isValidSY(input) {
         let semyear = input.substr(6, 12);
         semyear = semyear.match(converStrToArr);
         return semyear;
@@ -154,7 +155,7 @@ function CourseLookUp() {
         // e.preventDefault();
         setCourse(course);
         const departmentAndCourse = isValidDc(course);
-        const semesterAndYear = isValidSemYear(course);
+        const semesterAndYear = isValidSY(course);
         let filteredString = [...departmentAndCourse, ... semesterAndYear]
         if (filteredString.length === 4) {
             let filteredYear = getFulllYear(filteredString[3])
