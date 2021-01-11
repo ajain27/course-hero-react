@@ -9,8 +9,8 @@ function CourseLookUp() {
     const [isDisabled, setIsDisabled] = useState(true);
     const [showDetails, setShowDetails] = useState(false);
     let url = '';
-    const isNumber = new RegExp(/^[0-9]+$/);
-    const checkLetter = new RegExp(/[a-z]/i);
+    // const isNumber = new RegExp(/^[0-9]+$/);
+    // const checkLetter = new RegExp(/[a-z]/i);
     const converStrToArr = new RegExp(/("[^"]+"|[^"\s]+)/g)
     const inputef = useRef(null);
 
@@ -32,8 +32,11 @@ function CourseLookUp() {
         setCourse(input.value); // Setting the state with input value
         if (input.value.length <= 2) {
             checkValidDepartment(input.value);
-        } else if (input.value.length > 2 && input.value.length < 6) {
-            checkValidCourse(input.value);
+        } else if((input.value.length === 3)&& (input.value.charAt(3) === '-' || input.value.charAt(3) === ':' || input.value.charAt(3) === ' ')){
+            setIsDisabled(false);
+            setHasError(false)
+        } else {
+            checkValidCourse(input.value)
         }
         input.value = input.value ? normalizeInput(input.value) : '';
     }
@@ -55,7 +58,8 @@ function CourseLookUp() {
 
     // Checking the the department name is alphabets only
     function checkValidDepartment(dept) {
-        if (dept && dept.match(checkLetter)) {
+        const d = dept.substr(0, 2);
+        if (d && !hasNumbers(d)) {
             setIsDisabled(false);
             setIsValidDepartment(true);
             setHasError(false);
@@ -64,11 +68,14 @@ function CourseLookUp() {
             setIsValidDepartment(false);
             setHasError(true);
         }
+
     }
- // Checking the the course name is digits only
+    // Checking the the course name is digits only
     function checkValidCourse(crs) {
         const courseNumber = crs.substring(2, 5)
-        if (courseNumber && courseNumber.match(isNumber)) {
+        // const c = checkSpecialCharsinDc(courseNumber);
+        // console.log(c);
+        if (courseNumber && hasNumbers(courseNumber)) {
             setIsDisabled(false);
             setIsValidCourse(true);
             setHasError(false);
@@ -185,7 +192,7 @@ function CourseLookUp() {
         }
         return b.match(converStrToArr);
     }
-// extracting only the numbers from the string
+    // extracting only the numbers from the string
     function extractNumsOnly(num) {
         let numberPattern = /\d+/g;
         return num.match(numberPattern);
