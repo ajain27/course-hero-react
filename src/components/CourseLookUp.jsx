@@ -13,12 +13,6 @@ function CourseLookUp() {
     const checkLetter = new RegExp(/[a-z]/i);
     const converStrToArr = new RegExp(/("[^"]+"|[^"\s]+)/g)
     const inputef = useRef(null);
-    const SemesterAbbr = {
-        "S": "Spring",
-        "Su": "Summer",
-        "F": "Fall",
-        "W": "Winter"
-    }
 
     useEffect(() => {
         inputef.current.focus();
@@ -115,45 +109,68 @@ function CourseLookUp() {
     }
 
     function getSemesters(semester) {
+        const SemesterAbbr = {
+            "S": "Spring",
+            "Su": "Summer",
+            "F": "Fall",
+            "W": "Winter"
+        }
         if (semester in SemesterAbbr) {
             return SemesterAbbr[semester]
         } else {
             setHasError(true);
             setIsDisabled(true);
         }
+        return semester;
     }
 
     function isValidDc(input) {
         let departmentAndCourse = [];
         const deptCrs = input.substr(0, 6);
-        let inputStr = checkSpecialCharsinDc(deptCrs);
-        const department = alphaOnly(inputStr);
-        const courseNumber = numsOnly(inputStr);
-        departmentAndCourse.push(...department, ...courseNumber);
-        return departmentAndCourse;
+        if (hasNumbers(deptCrs)) {
+            let inputStr = checkSpecialCharsinDc(deptCrs);
+            const department = extractAlphabetsOnly(inputStr);
+            const courseNumber = extractNumsOnly(inputStr);
+            departmentAndCourse.push(...department, ...courseNumber);
+            return departmentAndCourse;
+        } else {
+            setIsDisabled(true);
+            setHasError(true);
+        }
+
     }
 
     function isValidSY(input) {
         let validSY;
         let semyear;
         semyear = input.substr(6, 13).trim();
-        if (!hasWhiteSpace(semyear)) {
-            const sem = alphaOnly(semyear);
-            const year = numsOnly(semyear);
-            const SY = [...sem, ...year]
-            validSY = SY;
+        if (hasNumbers(semyear)) {
+            if (!hasWhiteSpace(semyear)) {
+                let sem = extractAlphabetsOnly(semyear);
+                const year = extractNumsOnly(semyear);
+                const SY = [...sem, ...year]
+                validSY = SY;
+            } else {
+                validSY = semyear.match(converStrToArr);
+            }
+            return validSY;
         } else {
-            validSY = semyear.match(converStrToArr);
+            setHasError(true);
+            setIsDisabled(true);
+            return;
         }
-        return validSY;
     }
 
     function hasWhiteSpace(s) {
         return /\s/g.test(s);
     }
 
+    function hasNumbers(str) {
+        return /\d/.test(str);
+    }
 
-    function alphaOnly(a) {
+
+    function extractAlphabetsOnly(a) {
         var b = '';
         for (var i = 0; i < a.length; i++) {
             if (a[i] >= 'A' && a[i] <= 'z') b += a[i];
@@ -161,7 +178,7 @@ function CourseLookUp() {
         return b.match(converStrToArr);
     }
 
-    function numsOnly(num) {
+    function extractNumsOnly(num) {
         let numberPattern = /\d+/g;
         return num.match(numberPattern);
     }
@@ -172,26 +189,31 @@ function CourseLookUp() {
         const departmentAndCourse = isValidDc(course);
         const semesterAndYear = isValidSY(course);
         console.log(semesterAndYear);
-        let filteredString = [...departmentAndCourse, ...semesterAndYear]
-        if (filteredString.length === 4) {
-            let filteredYear = getFulllYear(filteredString[3])
-            const semester = getSemesters([filteredString[2]]);
-            const year = filteredYear;
-            const courseInfo = {};
-            courseInfo['department'] = filteredString[0];
-            courseInfo['course'] = filteredString[1];
-            courseInfo['year'] = year;
-            courseInfo['semester'] = semester;
-            if (courseInfo.department !== undefined && courseInfo.course !== undefined && courseInfo.year !== undefined && courseInfo.semester !== undefined) {
-                course = courseInfo;
-                setCourse(course);
-                setShowDetails(true);
-                setHasError(false);
+        if (departmentAndCourse !== undefined && semesterAndYear !== undefined) {
+            let filteredString = [...departmentAndCourse, ...semesterAndYear]
+            if (filteredString.length === 4) {
+                let filteredYear = getFulllYear(filteredString[3])
+                const semester = getSemesters([filteredString[2]]);
+                const year = filteredYear;
+                const courseInfo = {};
+                courseInfo['department'] = filteredString[0];
+                courseInfo['course'] = filteredString[1];
+                courseInfo['year'] = year;
+                courseInfo['semester'] = semester;
+                if (courseInfo.department !== undefined && courseInfo.course !== undefined && courseInfo.year !== undefined && courseInfo.semester !== undefined) {
+                    course = courseInfo;
+                    setCourse(course);
+                    setShowDetails(true);
+                    setHasError(false);
+                } else {
+                    setHasError(true);
+                }
+                setIsDisabled(false);
+                e.target.value = null;
             } else {
                 setHasError(true);
+                setIsDisabled(true);
             }
-            setIsDisabled(false);
-            e.target.value = null;
         } else {
             setHasError(true);
             setIsDisabled(true);
