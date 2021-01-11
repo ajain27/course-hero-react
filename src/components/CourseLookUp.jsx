@@ -15,24 +15,26 @@ function CourseLookUp() {
     const inputef = useRef(null);
 
     useEffect(() => {
+        // focuses the input box on load
         inputef.current.focus();
+        // disabling the button on load
         setIsDisabled(true)
     }, [])
 
     function handleChange(e) {
         let input = e.target;
-        if (!input.value) {
+        if (!input.value) { // disabling if value is not emplty or null - 
             setIsDisabled(true)
         } else {
             setIsDisabled(false);
             setShowDetails(false);
         }
-        setCourse(input.value);
-        // if (input.value.length <= 2) {
-        //     checkValidDepartment(input.value);
-        // } else if (input.value.length > 2 && input.value.length < 6) {
-        //     checkValidCourse(input.value);
-        // }
+        setCourse(input.value); // Setting the state with input value
+        if (input.value.length <= 2) {
+            checkValidDepartment(input.value);
+        } else if (input.value.length > 2 && input.value.length < 6) {
+            checkValidCourse(input.value);
+        }
         input.value = input.value ? normalizeInput(input.value) : '';
     }
 
@@ -51,6 +53,7 @@ function CourseLookUp() {
         return courseInfo;
     }
 
+    // Checking the the department name is alphabets only
     function checkValidDepartment(dept) {
         if (dept && dept.match(checkLetter)) {
             setIsDisabled(false);
@@ -62,7 +65,7 @@ function CourseLookUp() {
             setHasError(true);
         }
     }
-
+ // Checking the the course name is digits only
     function checkValidCourse(crs) {
         const courseNumber = crs.substring(2, 5)
         if (courseNumber && courseNumber.match(isNumber)) {
@@ -108,6 +111,7 @@ function CourseLookUp() {
         }
     }
 
+    // Accepting abbreviations for the Semetser names
     function getSemesters(semester) {
         const SemesterAbbr = {
             "S": "Spring",
@@ -124,6 +128,7 @@ function CourseLookUp() {
         return semester;
     }
 
+    // Validating the department and course
     function isValidDc(input) {
         let departmentAndCourse = [];
         const deptCrs = input.substr(0, 6);
@@ -140,6 +145,7 @@ function CourseLookUp() {
 
     }
 
+    // Validating the semester and year
     function isValidSY(input) {
         let validSY;
         let semyear;
@@ -161,15 +167,17 @@ function CourseLookUp() {
         }
     }
 
+    // checking if string has white sapce
     function hasWhiteSpace(s) {
         return /\s/g.test(s);
     }
 
+    //checking if string has numbers
     function hasNumbers(str) {
         return /\d/.test(str);
     }
 
-
+    // extracting only the alphabets from the string
     function extractAlphabetsOnly(a) {
         var b = '';
         for (var i = 0; i < a.length; i++) {
@@ -177,12 +185,13 @@ function CourseLookUp() {
         }
         return b.match(converStrToArr);
     }
-
+// extracting only the numbers from the string
     function extractNumsOnly(num) {
         let numberPattern = /\d+/g;
         return num.match(numberPattern);
     }
 
+    // Submitting the entered course to get extracted result
     function handleSubmit(e) {
         // e.preventDefault();
         setCourse(course);
