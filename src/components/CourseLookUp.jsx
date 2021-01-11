@@ -24,7 +24,8 @@ function CourseLookUp() {
     function handleChange(e) {
         let input = e.target;
         if (!input.value) { // disabling if value is not emplty or null - 
-            setIsDisabled(true)
+            setIsDisabled(true);
+            setShowDetails(false);
         } else {
             setIsDisabled(false);
             setShowDetails(false);
