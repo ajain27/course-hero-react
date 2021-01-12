@@ -33,7 +33,7 @@ function CourseLookUp() {
         setCourse(input.value); // Setting the state with input value
         if (input.value.length <= 2) {
             checkValidDepartment(input.value);
-        } else if((input.value.length === 3)&& (input.value.charAt(3) === '-' || input.value.charAt(3) === ':' || input.value.charAt(3) === ' ')){
+        } else if ((input.value.length === 3) && (input.value.charAt(3) === '-' || input.value.charAt(3) === ':' || input.value.charAt(3) === ' ')) {
             setIsDisabled(false);
             setHasError(false)
         } else {
@@ -199,6 +199,19 @@ function CourseLookUp() {
         return num.match(numberPattern);
     }
 
+    function handleEnterClick(e) {
+        if (e.which === 13){
+            e.preventDefault();
+            let input = e.target;
+            console.log('working', input.value);
+            if (input && input.value) {
+                handleSubmit(e);
+            } else {
+                return;
+            }
+        }
+    }
+
     // Submitting the entered course to get extracted result
     function handleSubmit(e) {
         // e.preventDefault();
@@ -257,7 +270,7 @@ function CourseLookUp() {
                                             id="course"
                                             ref={inputef}
                                             value={course.name}
-                                            pattern='(/^(.{6})(.*)$/, "$1 $2")'
+                                            onKeyDown={handleEnterClick}
                                             onChange={handleChange} />
                                     </div>
                                 </div>
