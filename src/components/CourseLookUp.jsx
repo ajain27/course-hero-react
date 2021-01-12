@@ -203,7 +203,6 @@ function CourseLookUp() {
         if (e.which === 13){
             e.preventDefault();
             let input = e.target;
-            console.log('working', input.value);
             if (input && input.value) {
                 handleSubmit(e);
             } else {
@@ -218,7 +217,6 @@ function CourseLookUp() {
         setCourse(course);
         const departmentAndCourse = isValidDc(course);
         const semesterAndYear = isValidSY(course);
-        console.log(semesterAndYear);
         if (departmentAndCourse !== undefined && semesterAndYear !== undefined) {
             let filteredString = [...departmentAndCourse, ...semesterAndYear]
             if (filteredString.length === 4) {
