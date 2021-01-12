@@ -193,14 +193,14 @@ function CourseLookUp() {
         }
         return b.match(converStrToArr);
     }
-    
+
     // extracting only the numbers from the string
     function extractNumsOnly(num) {
         let numberPattern = /\d+/g;
         return num.match(numberPattern);
     }
 
-    function handleEnterClick(e) {
+    function handleEnterKey(e) {
         if (e.which === 13){
             e.preventDefault();
             let input = e.target;
@@ -269,7 +269,7 @@ function CourseLookUp() {
                                             id="course"
                                             ref={inputef}
                                             value={course.name}
-                                            onKeyDown={handleEnterClick}
+                                            onKeyDown={handleEnterKey}
                                             onChange={handleChange} />
                                     </div>
                                 </div>
