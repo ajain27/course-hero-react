@@ -9,8 +9,6 @@ function CourseLookUp() {
     const [isDisabled, setIsDisabled] = useState(true);
     const [showDetails, setShowDetails] = useState(false);
     let url = '';
-    // const isNumber = new RegExp(/^[0-9]+$/);
-    // const checkLetter = new RegExp(/[a-z]/i);
     const converStrToArr = new RegExp(/("[^"]+"|[^"\s]+)/g)
     const inputef = useRef(null);
 
