@@ -193,6 +193,7 @@ function CourseLookUp() {
         }
         return b.match(converStrToArr);
     }
+    
     // extracting only the numbers from the string
     function extractNumsOnly(num) {
         let numberPattern = /\d+/g;
